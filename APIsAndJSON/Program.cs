@@ -8,32 +8,22 @@ namespace APIsAndJSON
         {
             var client = new HttpClient();
 
-            var kanyeURL = "https://api.kanye.rest/";
+            var AppSettingsText = File.ReadAllText("appsettings.json");
 
-            var ronURL = "https://ron-swanson-quotes.herokuapp.com/v2/quotes";
+            var conversation = new RonVSKanyeAPI(client);
 
-            for (int i = 1; i <= 5; i++)
-            {
-                Console.WriteLine($"Conversation {i}:");
-                Console.WriteLine();
+            var currentWeather = new OpenWeatherMapAPI(client,AppSettingsText);
 
-                var kanyeResponse = client.GetStringAsync(kanyeURL).Result;
-                var kanyeQuote = JObject.Parse(kanyeResponse).GetValue("quote").ToString();
-                Console.Write("Kanye: ");
-                Console.WriteLine(kanyeQuote);
-                Console.WriteLine();
+            conversation.HowLongConversation(5);
 
-                var ronResponse = client.GetStringAsync(ronURL).Result;
-                var ronQuote = JArray.Parse(ronResponse).ToString().Replace("[", "").Replace("]", "").Replace('"', ' ').Trim();
-                Console.Write("Ron Swanson: ");
-                Console.WriteLine(ronQuote);
+            Console.WriteLine();
+            Console.WriteLine("What a thriving conversation! Now press enter to display the weather!");
 
-                for(int j  = 0; j < Console.WindowWidth; j++)
-                {
-                    Console.Write("_");
-                }
-                Console.WriteLine();
-            }
+            Console.ReadKey();
+
+            Console.Clear();
+
+            currentWeather.DisplayWeather();
 
         }
     }
